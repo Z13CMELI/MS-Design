@@ -1,0 +1,1706 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GestureOps · MySupply REX · Decathlon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap">
+<style>
+:root {
+  --c500: #3643ba; --c050: #E3E6FC; --c700: #262f82; --c900: #0d1566;
+  --g600: #017F5C; --g050: #D5F5EC;
+  --rd: #C0182A; --rd-l: #FDDFE0;
+  --am: #DB6900; --am-l: #FFE5D6;
+  --t: #101010; --tq: #616161; --ts: #949494;
+  --bg: #ffffff; --bg-alt: #F5F4F5; --border: #E1E0DF;
+  --rs: 8px; --rf: 999px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── Nav ── */
+.top-nav{
+  position:fixed;top:0;left:0;right:0;height:52px;z-index:100;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 32px;gap:16px
+}
+.nav-brand{font-size:13px;font-weight:800;color:var(--c500);letter-spacing:-.2px}
+.nav-sep{color:var(--border);font-size:14px}
+.nav-sub{font-size:12px;color:var(--tq);font-weight:500}
+.nav-sp{flex:1}
+.nav-acts{display:flex;gap:4px}
+.nav-act{
+  padding:4px 10px;border-radius:var(--rf);font-size:11px;font-weight:700;
+  color:var(--tq);text-decoration:none;transition:all .13s;letter-spacing:.2px
+}
+.nav-act:hover{background:var(--c050);color:var(--c500)}
+.nav-act.active{background:var(--c050);color:var(--c500)}
+
+/* ── Scene base ── */
+.scene{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:80px 0 64px;position:relative;overflow:hidden
+}
+.scene > *{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.scene.in > *{opacity:1;transform:none}
+.scene.in > *:nth-child(2){transition-delay:.1s}
+.scene.in > *:nth-child(3){transition-delay:.2s}
+.scene.in > *:nth-child(4){transition-delay:.3s}
+.scene.in > *:nth-child(5){transition-delay:.4s}
+.scene.in > *:nth-child(6){transition-delay:.5s}
+
+.wrap{max-width:1100px;margin:0 auto;padding:0 48px;width:100%}
+
+/* ── Part headers ── */
+.part-band{
+  min-height:100vh;background:var(--c500);
+  display:flex;align-items:center;justify-content:flex-start;padding:80px 0;
+  border-top:3px solid rgba(255,255,255,.18);
+  position:relative
+}
+.part-band::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,rgba(255,255,255,.0),rgba(255,255,255,.35) 40%,rgba(255,255,255,.0));
+}
+.part-band > *{opacity:0;transition:opacity .8s ease,transform .8s ease;transform:translateX(-24px)}
+.part-band.in > *{opacity:1;transform:none}
+.part-band.in > *:nth-child(2){transition-delay:.15s}
+.part-band.in > *:nth-child(3){transition-delay:.3s}
+.part-band-inner{padding:0 80px}
+.part-act{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.part-act::before{content:'';display:inline-block;width:24px;height:2px;background:rgba(255,255,255,.4);border-radius:2px}
+.part-title{font-size:clamp(56px,6vw,96px);font-weight:900;letter-spacing:-2.5px;line-height:.95;color:#fff}
+.part-sub{font-size:20px;color:rgba(255,255,255,.65);margin-top:24px;max-width:52ch;line-height:1.5;font-weight:400}
+
+/* ── Dark/drama scenes ── */
+.scene-dark{background:#0a0f1e}
+.scene-dark .scene-num,.scene-dark h2,.scene-dark .kick{color:#fff}
+.scene-dark .lead{color:rgba(255,255,255,.6)}
+.scene-red{background:var(--rd)}
+.scene-red *{color:#fff !important}
+
+/* ── Typography ── */
+.scene-num{font-size:clamp(36px,4vw,52px);font-weight:900;letter-spacing:-1.5px;color:var(--c500);line-height:1;margin-bottom:8px}
+.kick{font-size:clamp(28px,3.5vw,42px);font-weight:800;letter-spacing:-1px;color:var(--c500);line-height:1.1}
+h2{font-size:clamp(32px,4vw,52px);font-weight:900;letter-spacing:-1.5px;line-height:1.05;margin-bottom:6px}
+.lead{font-size:clamp(17px,1.8vw,20px);color:var(--tq);max-width:62ch;margin-top:16px;line-height:1.6;font-weight:400}
+.body-text{font-size:16px;color:var(--tq);line-height:1.7;max-width:68ch}
+
+/* ── Stats grid ── */
+.stats{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;margin-top:32px}
+.stats.cols2{grid-template-columns:repeat(2,1fr)}
+.stats.cols3{grid-template-columns:repeat(3,1fr)}
+.stats.cols4{grid-template-columns:repeat(4,1fr)}
+.stat{padding:28px 24px;background:var(--bg)}
+.stat-val{font-size:clamp(36px,4vw,56px);font-weight:900;letter-spacing:-2px;line-height:1;color:var(--t)}
+.stat-val.pos{color:var(--g600)}.stat-val.brand{color:var(--c500)}.stat-val.neg{color:var(--rd)}.stat-val.warn{color:var(--am)}
+.stat-lbl{font-size:13px;color:var(--tq);margin-top:8px;line-height:1.4;font-weight:500}
+.stat-sub{font-size:11px;color:var(--ts);margin-top:4px}
+
+/* ── Cards ── */
+.cards{display:flex;flex-wrap:wrap;gap:16px;margin-top:32px}
+.card{flex:1;min-width:240px;border:1px solid var(--border);border-radius:10px;padding:22px;background:var(--bg)}
+.card-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;flex-shrink:0}
+.card-icon.blue{background:var(--c050)}.card-icon.green{background:var(--g050)}.card-icon.orange{background:var(--am-l)}
+.card-icon svg{width:18px;height:18px}
+.card h3{font-size:16px;font-weight:800;margin-bottom:6px;letter-spacing:-.3px}
+.card p{font-size:13px;color:var(--tq);line-height:1.6}
+.card-label{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;padding:2px 8px;border-radius:var(--rf);margin-bottom:10px}
+.card-label.scope{background:var(--c050);color:var(--c500)}
+.card-label.canvas{background:var(--g050);color:var(--g600)}
+.card-label.tray{background:var(--am-l);color:var(--am)}
+
+/* ── Orgline ── */
+.orgline{
+  background:var(--c050);border-radius:var(--rs);padding:16px 22px;
+  font-size:17px;color:var(--c700);font-weight:700;margin-top:24px;line-height:1.5
+}
+.orgline.dark{background:rgba(255,255,255,.08);color:rgba(255,255,255,.9)}
+.orgline.green{background:var(--g050);color:var(--g600)}
+
+/* ── Quote block ── */
+.pullq{
+  border-left:3px solid var(--c500);padding:12px 20px;margin:24px 0;
+  font-size:17px;color:var(--t);font-weight:600;font-style:italic;line-height:1.6;background:var(--bg-alt);border-radius:0 var(--rs) var(--rs) 0
+}
+
+/* ── Incident boxes ── */
+.incident-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
+.incident-box{border-radius:12px;padding:28px;position:relative;overflow:hidden}
+.incident-box.silence{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.14)}
+.incident-box.excess{background:rgba(192,24,42,.18);border:1px solid rgba(192,24,42,.55)}
+.incident-box-label{font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:12px}
+.incident-box h3{font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:10px}
+.incident-box p{font-size:13px;color:rgba(255,255,255,.65);line-height:1.6}
+.incident-icon{position:absolute;bottom:-8px;right:-4px;opacity:.07}
+.incident-icon svg{width:120px;height:120px;color:#fff}
+
+/* ── Planner tiers ── */
+.planner-tiers{display:flex;flex-direction:column;gap:10px;margin-top:28px;max-width:600px}
+.tier{display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:10px;border:1px solid var(--border);background:var(--bg);transition:all .2s}
+.tier.zdp{border-color:var(--c500);background:var(--c050)}
+.tier-num{font-size:11px;font-weight:800;color:var(--ts);letter-spacing:.5px;width:24px;flex-shrink:0}
+.tier-content{flex:1}
+.tier-title{font-size:14px;font-weight:800;margin-bottom:2px}
+.tier-sub{font-size:12px;color:var(--tq)}
+.tier-arrow{font-size:20px;color:var(--ts)}
+.tier.zdp .tier-title{color:var(--c500)}
+.tier.zdp .tier-num{color:var(--c500)}
+.zdp-badge{font-size:10px;font-weight:800;background:var(--c500);color:#fff;padding:1px 8px;border-radius:var(--rf);margin-left:8px;vertical-align:middle}
+
+/* ── Tool fragmentation visual ── */
+.tool-chaos{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;max-width:640px}
+.tool-chip{
+  padding:7px 14px;border-radius:var(--rf);font-size:12px;font-weight:700;
+  border:1px solid var(--border);background:var(--bg-alt);color:var(--tq);
+  display:flex;align-items:center;gap:6px
+}
+.tool-chip.sap{border-color:#FFB900;color:#8B6500;background:#FFFBEB}
+.tool-chip.tableau{border-color:#4E8FBD;color:#1a4a6b;background:#EBF5FC}
+.tool-chip.excel{border-color:#217346;color:#155828;background:#EDFAF0}
+.tool-chip.misc{border-color:var(--border);color:var(--ts)}
+.tool-chip.unified{border-color:var(--c500);color:var(--c500);background:var(--c050);font-weight:800;font-size:13px}
+.arrow-big{font-size:32px;color:var(--c500);margin:12px 0;display:block;font-weight:900}
+
+/* ── Maturity steps ── */
+.maturity-steps{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+.mstep{border-radius:12px;padding:24px;border:1px solid var(--border)}
+.mstep.done{background:var(--bg-alt)}
+.mstep.active{background:var(--c050);border-color:var(--c500)}
+.mstep-badge{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;padding:2px 8px;border-radius:var(--rf);display:inline-block;margin-bottom:12px}
+.mstep.done .mstep-badge{background:var(--g050);color:var(--g600)}
+.mstep.active .mstep-badge{background:var(--c500);color:#fff}
+.mstep h3{font-size:20px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+.mstep p{font-size:13px;color:var(--tq);line-height:1.6}
+.mstep .benchmark{margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:var(--rs);font-size:12px;font-weight:600;color:var(--c700);font-style:italic;border:1px solid var(--c500)}
+
+/* ── Gesture architecture ── */
+.gesture-zones{display:grid;grid-template-rows:auto 1fr auto;gap:8px;margin-top:28px;height:340px;max-width:700px}
+.gz{border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;gap:14px}
+.gz.scope{background:var(--c050);border:1px solid rgba(54,67,186,.2)}
+.gz.canvas{background:var(--g050);border:1px solid rgba(1,127,92,.15);flex:1}
+.gz.tray{background:var(--am-l);border:1px solid rgba(219,105,0,.2)}
+.gz-label{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px}
+.gz.scope .gz-label{color:var(--c500)}.gz.canvas .gz-label{color:var(--g600)}.gz.tray .gz-label{color:var(--am)}
+.gz-q{font-size:22px;font-weight:900;letter-spacing:-1px}
+.gz.scope .gz-q{color:var(--c700)}.gz.canvas .gz-q{color:#014F39}.gz.tray .gz-q{color:#5a2900}
+.gz-desc{font-size:12px;color:var(--tq);margin-top:3px;line-height:1.5}
+.gz-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.gz.scope .gz-icon{background:rgba(54,67,186,.12)}.gz.canvas .gz-icon{background:rgba(1,127,92,.1)}.gz.tray .gz-icon{background:rgba(219,105,0,.12)}
+.gz-icon svg{width:16px;height:16px}
+
+/* ── Push/pull ── */
+.flow-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;margin-top:32px}
+.flow-col{display:flex;flex-direction:column;gap:10px}
+.flow-box{border-radius:10px;padding:16px 18px;border:1px solid var(--border)}
+.flow-box.push{border-color:var(--c500);background:var(--c050)}
+.flow-box.pull{border-color:var(--am);background:var(--am-l)}
+.flow-box.shared{border-color:var(--g600);background:var(--g050);text-align:center}
+.flow-label{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px}
+.flow-box.push .flow-label{color:var(--c500)}.flow-box.pull .flow-label{color:var(--am)}.flow-box.shared .flow-label{color:var(--g600)}
+.flow-box h4{font-size:15px;font-weight:800;margin-bottom:4px}
+.flow-box p{font-size:12px;color:var(--tq);line-height:1.5}
+.flow-arrow{font-size:28px;font-weight:900;color:var(--g600);text-align:center;line-height:1}
+
+/* ── Proof numbers ── */
+.proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:32px}
+.proof-card{border-radius:14px;padding:32px 28px}
+.proof-card.csat{background:var(--g050)}
+.proof-card.tickets{background:var(--c050)}
+.proof-card.trust{background:linear-gradient(135deg,#0a0f2e,var(--c700));color:#fff}
+.proof-card.shadow{background:var(--am-l)}
+.proof-val{font-size:clamp(48px,6vw,80px);font-weight:900;letter-spacing:-3px;line-height:1}
+.proof-card.csat .proof-val{color:var(--g600)}
+.proof-card.tickets .proof-val{color:var(--c500)}
+.proof-card.trust .proof-val{color:#fff}
+.proof-card.shadow .proof-val{color:var(--am)}
+.proof-lbl{font-size:16px;font-weight:700;margin-top:10px;line-height:1.4}
+.proof-card.trust .proof-lbl{color:rgba(255,255,255,.8)}
+.proof-sub{font-size:13px;color:var(--tq);margin-top:6px}
+.proof-card.trust .proof-sub{color:rgba(255,255,255,.55)}
+
+/* ── GestureOps Matrix ── */
+.matrix-table{width:100%;border-collapse:collapse;margin-top:28px;font-size:13px}
+.matrix-table th{padding:10px 14px;background:var(--c500);color:#fff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;text-align:left}
+.matrix-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--t)}
+.matrix-table tr:hover td{background:var(--bg-alt)}
+.matrix-table .output{font-weight:800;color:var(--c500)}
+.matrix-table .output.build{color:var(--c500)}.matrix-table .output.merge{color:var(--g600)}.matrix-table .output.auto{color:var(--am)}
+
+/* ── Cockpit visual ── */
+.cockpit-split{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;margin-top:28px}
+.cockpit-left{}
+.cockpit-right{display:flex;flex-direction:column;gap:10px}
+.cockpit-stat{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.1)}
+.cockpit-stat svg{width:20px;height:20px;flex-shrink:0}
+.cockpit-stat p{font-size:13px;color:rgba(255,255,255,.75);line-height:1.5}
+.cockpit-stat strong{color:#fff}
+.cockpit-pct{font-size:clamp(56px,6vw,88px);font-weight:900;letter-spacing:-4px;line-height:1;color:#fff}
+.cockpit-pct-sub{font-size:16px;color:rgba(255,255,255,.55);margin-top:8px}
+.vs-bar{width:100%;height:10px;border-radius:5px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:16px}
+.vs-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--c500),var(--g600))}
+
+/* ── Scroll offset for fixed nav ── */
+.scene, .part-band, #hero { scroll-margin-top: 52px; }
+
+/* ── Closing ── */
+.scene-close{background:var(--c900);color:#fff;min-height:100vh;display:flex;align-items:center}
+.close-inner{text-align:center;padding:0}
+.close-kicker{font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:20px}
+.close-title{font-size:clamp(40px,5vw,72px);font-weight:900;letter-spacing:-2.5px;color:#fff;line-height:1;margin-bottom:16px}
+.close-sub{font-size:18px;color:rgba(255,255,255,.55);max-width:50ch;margin:0 auto;line-height:1.6}
+.close-divider{width:48px;height:3px;background:var(--c050);border-radius:2px;margin:28px auto}
+
+/* ── Media / Screenshot zones ── */
+.media-zone{
+  width:100%;border-radius:12px;overflow:hidden;
+  background:var(--bg-alt);border:2px dashed var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:240px;gap:8px;color:var(--ts);position:relative
+}
+.media-zone img,.media-zone video{width:100%;height:100%;object-fit:cover;border-radius:10px;display:none}
+.media-zone img.loaded,.media-zone video.loaded{display:block}
+.media-zone-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;text-align:center}
+.media-zone-hint{font-size:11px;color:var(--ts);text-align:center}
+.media-zone svg{width:28px;height:28px;opacity:.4}
+
+/* ── Pill labels ── */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:var(--rf);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase}
+.pill.brand{background:var(--c050);color:var(--c500)}
+.pill.green{background:var(--g050);color:var(--g600)}
+.pill.dark{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8)}
+.pill.warn{background:var(--am-l);color:var(--am)}
+
+/* ── Gap helpers ── */
+.mt8{margin-top:8px}.mt16{margin-top:16px}.mt24{margin-top:24px}.mt32{margin-top:32px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.two-col.v-center{align-items:center}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <span class="nav-brand">MySupply · Design by Gesture</span>
+  <span class="nav-sep">/</span>
+  <span class="nav-sub">Decathlon · 2023–2025</span>
+  <div class="nav-sp"></div>
+  <div class="nav-acts">
+    <a class="nav-act" href="#act1">I · Context</a>
+    <a class="nav-act" href="#act2">II · Pivot</a>
+    <a class="nav-act" href="#act3">III · Engine</a>
+    <a class="nav-act" href="#act4">IV · Proof</a>
+    <a class="nav-act" href="#appendix" style="opacity:.5;border-left:1px solid var(--border);margin-left:4px;padding-left:12px">Appendix</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════ -->
+<!-- SCENE 0 · HERO                     -->
+<!-- ═══════════════════════════════════ -->
+<section class="scene scene-dark" id="hero" style="min-height:100vh;background:linear-gradient(160deg,#050a1a 0%,#0d1566 60%,#1a2a8a 100%)">
+  <div class="wrap">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center">
+      <!-- LEFT: text + KPIs -->
+      <div>
+        <span class="pill dark" style="margin-bottom:28px;display:inline-flex">Decathlon · 2023–2025</span>
+        <h2 style="font-size:clamp(36px,4.5vw,68px);letter-spacing:-2.5px;color:#fff;line-height:.95;max-width:16ch">From Tool Fragmentation to the Groundwork for AI.</h2>
+        <p class="lead" style="color:rgba(255,255,255,.55);max-width:44ch;margin-top:24px">How two years inside MySupply built the operational and interaction foundation for enterprise-wide One Interface — and for autonomous agents.</p>
+        <div style="display:flex;gap:28px;margin-top:40px;flex-wrap:wrap">
+          <div><div style="font-size:32px;font-weight:900;letter-spacing:-1.5px;color:#fff">+44%</div><div style="font-size:11px;color:rgba(255,255,255,.45);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:700">CSAT surge</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.1)"></div>
+          <div><div style="font-size:32px;font-weight:900;letter-spacing:-1.5px;color:#fff">−30%</div><div style="font-size:11px;color:rgba(255,255,255,.45);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:700">Support tickets</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.1)"></div>
+          <div><div style="font-size:32px;font-weight:900;letter-spacing:-1.5px;color:#fff">1.9→4.0</div><div style="font-size:11px;color:rgba(255,255,255,.45);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:700">Trust score /5</div></div>
+        </div>
+      </div>
+      <!-- RIGHT: product video in a browser-like frame -->
+      <div style="position:relative">
+        <!-- Browser chrome mockup -->
+        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)">
+          <div style="background:rgba(255,255,255,.05);padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.08)">
+            <div style="width:9px;height:9px;border-radius:50%;background:#C0182A;opacity:.7"></div>
+            <div style="width:9px;height:9px;border-radius:50%;background:#DB6900;opacity:.7"></div>
+            <div style="width:9px;height:9px;border-radius:50%;background:#017F5C;opacity:.7"></div>
+            <div style="flex:1;background:rgba(255,255,255,.07);border-radius:4px;height:18px;margin:0 8px;display:flex;align-items:center;padding:0 10px">
+              <span style="font-size:10px;color:rgba(255,255,255,.3);font-weight:600">mysupply.decathlon.com · Forecast Piloting</span>
+            </div>
+          </div>
+          <video autoplay loop muted playsinline style="width:100%;display:block;border-radius:0 0 11px 11px">
+            <source src="img/forecast-piloting-hero.mp4" type="video/mp4">
+          </video>
+        </div>
+        <!-- Subtle glow behind -->
+        <div style="position:absolute;inset:-20px;background:radial-gradient(ellipse at center,rgba(54,67,186,.3) 0%,transparent 70%);z-index:-1;pointer-events:none"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- ═══════════════════════════════════ -->
+<!-- SCENE · WHAT IS MYSUPPLY           -->
+<!-- ═══════════════════════════════════ -->
+<section class="scene" style="background:var(--bg-alt)">
+  <div class="wrap">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+
+      <!-- LEFT: definition -->
+      <div>
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ts);margin-bottom:16px">What is MySupply?</div>
+        <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:900;letter-spacing:-1.5px;color:var(--t);line-height:1.05;margin-bottom:20px">One platform to manage Decathlon's downstream supply chain.</h2>
+        <p style="font-size:15px;color:var(--tq);line-height:1.7;max-width:44ch">Forecast adjustments, replenishment settings, stock and order management — everything planners need to configure and pilot the algorithms, across stores and warehouses.</p>
+        <div style="margin-top:24px;padding:14px 18px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--border);font-size:13px;color:var(--tq);line-height:1.6">
+          In 2022–2023, two separate apps handled these workflows. In 2024, they merged into <strong style="color:var(--t)">one common platform — MySupply.</strong>
+        </div>
+      </div>
+
+      <!-- RIGHT: supply chain position -->
+      <div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--ts);margin-bottom:16px">Position in the dispatch chain</div>
+        <!-- Chain -->
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <div style="border-radius:10px;border:1px solid var(--border);padding:12px 14px;background:var(--bg)">
+              <div style="font-size:10px;font-weight:800;color:var(--ts);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Stores Forecasts</div>
+              <div style="font-size:11px;color:var(--tq)">We knew she would buy</div>
+            </div>
+            <div style="border-radius:10px;border:1px solid var(--border);padding:12px 14px;background:var(--bg)">
+              <div style="font-size:10px;font-weight:800;color:var(--ts);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Stores Target Stock</div>
+              <div style="font-size:11px;color:var(--tq)">We planned stock in store</div>
+            </div>
+            <div style="border-radius:10px;border:1px solid var(--border);padding:12px 14px;background:var(--bg)">
+              <div style="font-size:10px;font-weight:800;color:var(--ts);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Stores Order Proposal</div>
+              <div style="font-size:11px;color:var(--tq)">We ordered to the warehouse</div>
+            </div>
+            <div style="border-radius:10px;border:1px solid var(--border);padding:12px 14px;background:var(--bg)">
+              <div style="font-size:10px;font-weight:800;color:var(--ts);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Warehouse Replenishment</div>
+              <div style="font-size:11px;color:var(--tq)">We planned stock in the warehouse</div>
+            </div>
+          </div>
+          <!-- MySupply bar -->
+          <div style="border-radius:10px;border:2px solid var(--c500);padding:14px 18px;background:var(--c050);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px">
+            <div>
+              <div style="font-size:11px;font-weight:800;color:var(--c500);text-transform:uppercase;letter-spacing:.7px;margin-bottom:2px">MySupply</div>
+              <div style="font-size:12px;color:var(--c700)">RDP &amp; ZDP configure and pilot all of the above</div>
+            </div>
+            <div style="display:flex;gap:6px;flex-shrink:0">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--c500);display:flex;align-items:center;justify-content:center">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="6.5" cy="4" r="2.5"/><path d="M1.5 11.5c0-2.76 2.24-5 5-5s5 2.24 5 5"/></svg>
+              </div>
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--g600);display:flex;align-items:center;justify-content:center">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="6.5" cy="4" r="2.5"/><path d="M1.5 11.5c0-2.76 2.24-5 5-5s5 2.24 5 5"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PART HEADER · ACT I                -->
+<!-- ═══════════════════════════════════ -->
+<section class="part-band" id="act1" style="position:relative;overflow:hidden;padding:0">
+  <!-- Warehouse background photo -->
+  <div style="position:absolute;inset:0;z-index:0">
+    <img src="img/warehouse-context.png" alt="Decathlon warehouse" style="width:100%;height:100%;object-fit:cover;opacity:.18;filter:grayscale(30%)">
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,var(--c500) 40%,rgba(54,67,186,.6) 75%,rgba(54,67,186,.15) 100%)"></div>
+  </div>
+  <div class="part-band-inner" style="position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;width:100%;padding:100px 80px">
+    <div>
+      <div class="part-act">Act I · Context & System Blind Spots</div>
+      <div class="part-title">Who keeps<br>the shelves full?</div>
+      <div class="part-sub">To understand our operational reality, we must first look at who pilots these flows — and what happens when automation runs without an interface.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:20px 22px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px">The chain</div>
+        <div style="font-size:14px;font-weight:700;color:#fff;letter-spacing:-.3px">Suppliers → CAC → CARs → Stores</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px">Continental warehouse to regional, then to 30 countries</div>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:20px 22px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px">Three personas</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="font-size:11px;font-weight:800;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:20px;color:#fff">ZMP</span><span style="font-size:12px;color:rgba(255,255,255,.65)">Zone Market Planner · Demand & season targets</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="font-size:11px;font-weight:800;background:#DB6900;padding:2px 8px;border-radius:20px;color:#fff">ZDP</span><span style="font-size:12px;color:rgba(255,255,255,.9);font-weight:600">Zone Dispatch Planner · <em>Our focus</em></span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="font-size:11px;font-weight:800;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:20px;color:#fff">RDP</span><span style="font-size:12px;color:rgba(255,255,255,.65)">Retail Dispatch Planner · Last mile</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- SCENE 2 · PLANNER TIERS            -->
+<!-- ═══════════════════════════════════ -->
+<section class="scene">
+  <div class="wrap">
+    <div>
+      <div class="scene-num">Operational Context</div>
+      <h2>Three personas.<br>One critical midstream node.</h2>
+      <p class="lead">At Decathlon, <strong>MySupply</strong> is the core digital workspace for downstream supply chain operations — from commercial alignment to in-season stock orchestration across 30 countries.</p>
+    </div>
+    <!-- ANIMATED DISPATCH DIAGRAM -->
+    <div style="margin-top:40px;background:var(--bg-alt);border-radius:16px;padding:32px 24px;overflow:hidden">
+      <svg id="dispatch-svg" viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:960px;display:block;margin:0 auto">
+        <style>
+          .ds-label{font-family:Inter,sans-serif;font-size:11px;font-weight:700;fill:#949494;text-transform:uppercase;letter-spacing:.7px}
+          .ds-role{font-family:Inter,sans-serif;font-size:11px;font-weight:800;letter-spacing:.5px}
+          .ds-node-title{font-family:Inter,sans-serif;font-size:13px;font-weight:800;fill:#101010}
+          .ds-node-sub{font-family:Inter,sans-serif;font-size:11px;fill:#616161}
+          .ds-persona-label{font-family:Inter,sans-serif;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+        </style>
+        <!-- SUPPLIERS -->
+        <rect x="12" y="80" width="128" height="100" rx="10" fill="#fff" stroke="#E1E0DF" stroke-width="1.5"/>
+        <text x="76" y="108" text-anchor="middle" class="ds-node-title">Suppliers</text>
+        <text x="76" y="124" text-anchor="middle" class="ds-node-sub">Factories</text>
+        <text x="76" y="138" text-anchor="middle" class="ds-node-sub">& plants</text>
+
+        <!-- ZMP ARROW (grey, dashed) -->
+        <line x1="142" y1="130" x2="224" y2="130" stroke="#C8C7C5" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <polygon points="220,125 230,130 220,135" fill="#C8C7C5"/>
+
+        <!-- CAC NODE -->
+        <rect x="236" y="50" width="168" height="160" rx="10" fill="#fff" stroke="#3643ba" stroke-width="2"/>
+        <text x="320" y="80" text-anchor="middle" class="ds-label" fill="#3643ba">Continental</text>
+        <text x="320" y="97" text-anchor="middle" class="ds-node-title">CAC</text>
+        <text x="320" y="115" text-anchor="middle" class="ds-node-sub">Demand Algorithm</text>
+        <text x="320" y="130" text-anchor="middle" class="ds-node-sub">FAST Algorithm</text>
+        <text x="320" y="145" text-anchor="middle" class="ds-node-sub">F&R Algorithm</text>
+
+        <!-- ZDP ARROWS (orange, animated) -->
+        <path id="zdp-path1" d="M 406 92 C 448 92 448 62 486 62" fill="none" stroke="#DB6900" stroke-width="2"/>
+        <path id="zdp-path2" d="M 406 130 L 486 130" fill="none" stroke="#DB6900" stroke-width="2"/>
+        <path id="zdp-path3" d="M 406 168 C 448 168 448 198 486 198" fill="none" stroke="#DB6900" stroke-width="2"/>
+        <polygon points="482,57 492,62 482,67" fill="#DB6900"/>
+        <polygon points="482,125 492,130 482,135" fill="#DB6900"/>
+        <polygon points="482,193 492,198 482,203" fill="#DB6900"/>
+        <!-- Animated dots on ZDP paths -->
+        <circle r="5" fill="#DB6900" opacity=".9">
+          <animateMotion dur="1.8s" repeatCount="indefinite" begin="0s"><mpath href="#zdp-path1"/></animateMotion>
+        </circle>
+        <circle r="5" fill="#DB6900" opacity=".9">
+          <animateMotion dur="1.8s" repeatCount="indefinite" begin=".6s"><mpath href="#zdp-path2"/></animateMotion>
+        </circle>
+        <circle r="5" fill="#DB6900" opacity=".9">
+          <animateMotion dur="1.8s" repeatCount="indefinite" begin="1.2s"><mpath href="#zdp-path3"/></animateMotion>
+        </circle>
+
+        <!-- CAR NODES -->
+        <rect x="494" y="42" width="128" height="44" rx="8" fill="#fff" stroke="#E1E0DF" stroke-width="1.5"/>
+        <text x="558" y="60" text-anchor="middle" class="ds-label">Regional</text>
+        <text x="558" y="76" text-anchor="middle" class="ds-node-title">CAR · North</text>
+        <rect x="494" y="107" width="128" height="44" rx="8" fill="#fff" stroke="#DB6900" stroke-width="2"/>
+        <text x="558" y="125" text-anchor="middle" class="ds-label" fill="#DB6900">Regional</text>
+        <text x="558" y="141" text-anchor="middle" class="ds-node-title">CAR · West</text>
+        <rect x="494" y="172" width="128" height="44" rx="8" fill="#fff" stroke="#E1E0DF" stroke-width="1.5"/>
+        <text x="558" y="190" text-anchor="middle" class="ds-label">Regional</text>
+        <text x="558" y="206" text-anchor="middle" class="ds-node-title">CAR · South</text>
+
+        <!-- RDP ARROWS (blue, dashed) -->
+        <path id="rdp-path1" d="M 624 64 C 662 64 662 100 700 100" fill="none" stroke="#3643ba" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <path id="rdp-path2" d="M 624 129 L 700 129" fill="none" stroke="#3643ba" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <path id="rdp-path3" d="M 624 194 C 662 194 662 158 700 158" fill="none" stroke="#3643ba" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <polygon points="696,95 706,100 696,105" fill="#3643ba"/>
+        <polygon points="696,124 706,129 696,134" fill="#3643ba"/>
+        <polygon points="696,153 706,158 696,163" fill="#3643ba"/>
+
+        <!-- DESTINATIONS -->
+        <rect x="708" y="42" width="112" height="30" rx="7" fill="#fff" stroke="#E1E0DF" stroke-width="1.5"/>
+        <text x="764" y="61" text-anchor="middle" class="ds-node-sub">Decathlon Store</text>
+        <rect x="708" y="84" width="112" height="30" rx="7" fill="#fff" stroke="#E1E0DF" stroke-width="1.5"/>
+        <text x="764" y="103" text-anchor="middle" class="ds-node-sub">Franchise</text>
+        <rect x="708" y="126" width="112" height="30" rx="7" fill="#fff" stroke="#E1E0DF" stroke-width="1.5"/>
+        <text x="764" y="145" text-anchor="middle" class="ds-node-sub">Resellers</text>
+        <rect x="708" y="168" width="112" height="30" rx="7" fill="#fff" stroke="#E1E0DF" stroke-width="1.5"/>
+        <text x="764" y="187" text-anchor="middle" class="ds-node-sub">E-Commerce</text>
+
+        <!-- PERSONA LABELS ROW — well below the diagram -->
+        <!-- ZMP -->
+        <rect x="140" y="240" width="90" height="26" rx="13" fill="#E3E6FC"/>
+        <text x="185" y="257" text-anchor="middle" class="ds-persona-label" fill="#3643ba">ZMP</text>
+        <!-- ZDP focus badge (centered on the orange zone) -->
+        <rect x="376" y="240" width="160" height="26" rx="13" fill="#3643ba"/>
+        <text x="456" y="257" text-anchor="middle" class="ds-persona-label" fill="#fff">ZDP · Our Design Focus</text>
+        <!-- RDP -->
+        <rect x="620" y="240" width="90" height="26" rx="13" fill="#E3E6FC"/>
+        <text x="665" y="257" text-anchor="middle" class="ds-persona-label" fill="#3643ba">RDP</text>
+
+        <!-- Connector lines from labels to their zones -->
+        <line x1="185" y1="240" x2="185" y2="135" stroke="#C8C7C5" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="456" y1="240" x2="456" y2="200" stroke="#DB6900" stroke-width="1" stroke-dasharray="3 3" opacity=".4"/>
+        <line x1="665" y1="240" x2="665" y2="165" stroke="#C8C7C5" stroke-width="1" stroke-dasharray="3 3"/>
+      </svg>
+    </div>
+    <div class="mt24">
+      <div class="planner-tiers" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:none;width:100%">
+        <div class="tier">
+          <div class="tier-num">ZMP</div>
+          <div class="tier-content">
+            <div class="tier-title">Zone Market Planner</div>
+            <div class="tier-sub">Demand modeling & macro season targets</div>
+          </div>
+        </div>
+        <div class="tier zdp">
+          <div class="tier-num">ZDP</div>
+          <div class="tier-content">
+            <div class="tier-title">Zone Dispatch Planner <span class="zdp-badge">Focus</span></div>
+            <div class="tier-sub">CAC → CAR — forecast, replenishment & seasonal flow</div>
+          </div>
+        </div>
+        <div class="tier">
+          <div class="tier-num">RDP</div>
+          <div class="tier-content">
+            <div class="tier-title">Retail Dispatch Planner</div>
+            <div class="tier-sub">CAR → Stores — last mile</div>
+          </div>
+        </div>
+      </div>
+      <div class="orgline mt16">The ZDP manages the critical CAC→CAR flow with <strong>hours to react and no room for silent errors</strong> — the highest operational volatility point in the chain.</div>
+    </div>
+    <!-- ZDP Reality — pain points & user verbatims -->
+    <div style="margin-top:40px;padding-top:40px;border-top:1px solid var(--border)">
+      <div>
+        <div class="scene-num">The ZDP Reality</div>
+      <h2>70% automated. 30% human judgment.<br><span style="color:var(--rd)">100% pain.</span></h2>
+      <p class="lead">The algorithm handles the routine. What it can't process — weather, constraints, shortages — lands on the ZDP, across 10+ tools, with no guardrails.</p>
+    </div>
+    <!-- Pain points + user quotes -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:32px">
+      <div style="border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08);border:1px solid var(--border)">
+        <img src="img/zdp-business-risks.png" alt="ZDP — From user activities to business risks" style="width:100%;display:block">
+      </div>
+      <div style="border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08);border:1px solid var(--border)">
+        <img src="img/zdp-what-they-say.png" alt="What ZDPs say about their tools" style="width:100%;display:block">
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+<!-- ═══════════════════════════════════ -->
+<!-- SCENE 4 · TOOL FRAGMENTATION       -->
+<!-- ═══════════════════════════════════ -->
+<section class="scene">
+  <div class="wrap">
+    <div>
+      <div class="scene-num">The Operational Reality</div>
+      <h2>One gesture, scattered across ten tools.</h2>
+      <p class="lead">To manage a single seasonal dispatch flow, a ZDP juggles SAP transactions, offline Excel cockpits, legacy Fiori apps, and 3 to 5 siloed Tableau dashboards — across 6 milestones from pre-season setup to end-of-season cleanup.</p>
+    </div>
+    <!-- FULL-WIDTH CONVERGENCE DIAGRAM -->
+    <div style="margin-top:36px">
+      <div style="display:grid;grid-template-columns:1fr 80px 1fr;gap:0;align-items:center">
+        <!-- LEFT: scattered tools -->
+        <div>
+          <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--ts);margin-bottom:14px">Before — 16 fragmented tools</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="tool-chip sap" style="justify-content:center">SAP Z_FAST</div>
+            <div class="tool-chip sap" style="justify-content:center">SAP ZDIS_PUSH</div>
+            <div class="tool-chip sap" style="justify-content:center">SAP ZME21N</div>
+            <div class="tool-chip sap" style="justify-content:center">SAP ZCAR</div>
+            <div class="tool-chip sap" style="justify-content:center">SAP ZVE13</div>
+            <div class="tool-chip sap" style="justify-content:center">SAP ZPENURI</div>
+            <div class="tool-chip sap" style="justify-content:center">SAP ZPAR_RESECOM</div>
+            <div class="tool-chip tableau" style="justify-content:center">Tableau Forecast</div>
+            <div class="tool-chip tableau" style="justify-content:center">Tableau Service Rate</div>
+            <div class="tool-chip tableau" style="justify-content:center">Tableau Shortages</div>
+            <div class="tool-chip excel" style="justify-content:center">Cockpit F&R Settings</div>
+            <div class="tool-chip excel" style="justify-content:center">Cockpit Coverage</div>
+            <div class="tool-chip excel" style="justify-content:center">Cockpit DIF (AFO)</div>
+            <div class="tool-chip excel" style="justify-content:center">Cockpit Pre-Alloc</div>
+            <div class="tool-chip misc" style="justify-content:center">CADE++</div>
+            <div class="tool-chip misc" style="justify-content:center">PCON · Partners Portal</div>
+          </div>
+        </div>
+        <!-- CENTER: big arrow -->
+        <div style="text-align:center">
+          <div style="font-size:48px;font-weight:900;color:var(--c500);line-height:1">→</div>
+        </div>
+        <!-- RIGHT: unified -->
+        <div>
+          <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--ts);margin-bottom:14px">After — one unified gesture</p>
+          <div style="background:var(--c500);border-radius:14px;padding:24px 20px;text-align:center;margin-bottom:14px">
+            <div style="font-size:18px;font-weight:900;color:#fff;letter-spacing:-.5px">MySupply</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:4px;font-weight:600">FAST Piloting · Replenishment Settings<br>Order Management · Shortage Tracking</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <span style="font-size:10px;font-weight:700;background:var(--bg-alt);padding:3px 9px;border-radius:var(--rf);color:var(--tq)">Dispatch Strategy</span>
+            <span style="font-size:10px;font-weight:700;background:var(--bg-alt);padding:3px 9px;border-radius:var(--rf);color:var(--tq)">Forecast Setup</span>
+            <span style="font-size:10px;font-weight:700;background:var(--bg-alt);padding:3px 9px;border-radius:var(--rf);color:var(--tq)">Replenishment Rules</span>
+            <span style="font-size:10px;font-weight:700;background:var(--bg-alt);padding:3px 9px;border-radius:var(--rf);color:var(--tq)">Live Monitoring</span>
+            <span style="font-size:10px;font-weight:700;background:var(--bg-alt);padding:3px 9px;border-radius:var(--rf);color:var(--tq)">Constraint Override</span>
+            <span style="font-size:10px;font-weight:700;background:var(--bg-alt);padding:3px 9px;border-radius:var(--rf);color:var(--tq)">Season Review</span>
+          </div>
+          <div class="orgline mt16">Captive internal users never punish — <strong>they retreat into shadow Excel files, taking institutional knowledge off-grid forever.</strong> <span style="font-size:12px;color:var(--tq)">— Jared Spool</span></div>
+        </div>
+      </div>
+      <!-- Before ↔ After interactive toggle -->
+      <div style="margin-top:40px">
+        <div style="text-align:center;font-size:11px;color:var(--ts);font-weight:600;margin-bottom:10px;letter-spacing:.3px">Compare the two interfaces ↓</div>
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:0">
+          <div style="height:1px;background:linear-gradient(90deg,transparent,var(--border))"></div>
+          <div style="display:flex;align-items:center;gap:0;border:1px solid var(--border);border-radius:var(--rf);overflow:hidden;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase">
+            <button onclick="setBAPanel('before')" id="ba-btn-before" style="padding:6px 14px;background:#C0182A;color:#fff;border:none;cursor:pointer;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;font-family:inherit;transition:background .2s,color .2s">Before · SAP</button>
+            <button onclick="setBAPanel('after')" id="ba-btn-after" style="padding:6px 14px;background:var(--bg-alt);color:var(--ts);border:none;cursor:pointer;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;font-family:inherit;transition:background .2s,color .2s">→ After · MySupply</button>
+          </div>
+          <div style="height:1px;background:linear-gradient(90deg,var(--border),transparent)"></div>
+        </div>
+      </div>
+      <!-- BEFORE: SAP raw interface -->
+      <div id="panel-before" style="display:block;margin-top:24px;border-radius:12px;overflow:hidden;border:1px solid rgba(192,24,42,.25);box-shadow:0 8px 32px rgba(0,0,0,.1)">
+        <div style="background:#1a0000;padding:10px 16px;display:flex;align-items:center;gap:10px">
+          <div style="display:flex;gap:5px">
+            <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12)"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12)"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12)"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.3px">SAP Business Client · ZFAST — Raw interface, no UX layer</span>
+          <span style="margin-left:auto;font-size:10px;font-weight:800;background:rgba(192,24,42,.4);color:rgba(255,180,180,.9);padding:2px 8px;border-radius:var(--rf)">LEGACY · PRE-MYSUPPLY</span>
+        </div>
+        <video autoplay loop muted playsinline style="width:100%;display:block">
+          <source src="img/sap-settings-demo.mp4" type="video/mp4">
+        </video>
+      </div>
+      <!-- AFTER: MySupply product video -->
+      <div id="panel-after" style="display:none;margin-top:24px;border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 8px 32px rgba(54,67,186,.12)">
+        <div style="background:var(--c500);padding:10px 16px;display:flex;align-items:center;gap:10px">
+          <div style="display:flex;gap:5px">
+            <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.3px">MySupply · Warehouse Replenishment Settings</span>
+          <span style="margin-left:auto;font-size:10px;font-weight:800;background:rgba(255,255,255,.15);color:#fff;padding:2px 8px;border-radius:var(--rf)">LIVE PRODUCT</span>
+        </div>
+        <video autoplay loop muted playsinline style="width:100%;display:block">
+          <source src="img/warehouse-settings-demo.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- SCENE · MATURITY MODEL (ACT I END) -->
+<!-- ═══════════════════════════════════ -->
+<section class="scene" style="background:var(--bg-alt)">
+  <div class="wrap">
+    <div>
+      <div class="scene-num">Mission Complete</div>
+      <h2>Merging the apps was only the start.</h2>
+      <p class="lead">One portal was the foundation. But a shared URL doesn't unify the gesture — planners could navigate one app and still context-switch between five different interaction models. Two years later, both steps are done.</p>
+    </div>
+    <div class="maturity-steps mt32">
+      <div class="mstep done">
+        <span class="mstep-badge">Step 1 · Complete</span>
+        <h3>Tool Aggregation</h3>
+        <p>Multiple portals consolidated under a single URL. Unified navigation and Single Sign-On. Strong engineering foundation, limited operational impact.</p>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <span class="pill green">✓ Single URL</span>
+          <span class="pill green">✓ SSO</span>
+          <span class="pill green">✓ Unified nav</span>
+        </div>
+      </div>
+      <div class="mstep done">
+        <span class="mstep-badge">Step 2 · Complete</span>
+        <h3>Gesture Unification</h3>
+        <p>The operational action is unified — not just the portal. From signal detection to decision validation in a single uninterrupted interaction arc. Proven across 3 domains, 30 countries.</p>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <span class="pill green">✓ WHEN + IF → THEN</span>
+          <span class="pill green">✓ 3 domains · 0 redesign</span>
+          <span class="pill green">✓ +44% CSAT</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PART HEADER · ACT II               -->
+<!-- ═══════════════════════════════════ -->
+<section class="part-band" id="act2" style="background:var(--c700)">
+  <div class="part-band-inner">
+    <div class="part-act">Act II · The Strategic Pivot</div>
+    <div class="part-title">Stop designing<br>by persona.</div>
+    <div class="part-sub">Aggregating tools under a single URL only scratches the surface. Real scale requires designing around the universal mechanics of action — not the org chart.</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCENE · ACT II PIVOT (MERGED)          -->
+<!-- ═══════════════════════════════════════ -->
+<section class="scene" style="background:var(--bg-alt)">
+  <div class="wrap">
+    <div>
+      <div class="scene-num">The Strategic Pivot</div>
+      <h2>Persona × Feature = redesign forever.<br>Gesture × Context = scales once.</h2>
+      <p class="lead">Every persona-based interface is a liability. Each new team, domain, or market creates a new surface to design and maintain. Designing by universal action inverts that equation — and the proof is already in production.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:start;margin-top:40px">
+
+      <!-- LEFT: persona-based (doesn't scale) -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--rd)">✕ Design by persona</span>
+        </div>
+        <!-- 3 siloed interfaces -->
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg)">
+            <div style="background:#eee;padding:7px 12px;font-size:10px;font-weight:800;color:var(--tq);text-transform:uppercase;letter-spacing:.5px">ZMP Interface</div>
+            <div style="padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:5px">
+              <div style="height:8px;border-radius:3px;background:var(--bg-alt)"></div>
+              <div style="height:8px;border-radius:3px;background:var(--bg-alt)"></div>
+              <div style="height:8px;border-radius:3px;background:var(--bg-alt)"></div>
+              <div style="height:8px;border-radius:3px;background:var(--bg-alt)"></div>
+            </div>
+          </div>
+          <div style="border-radius:10px;border:2px solid var(--c500);overflow:hidden;background:var(--bg)">
+            <div style="background:var(--c050);padding:7px 12px;font-size:10px;font-weight:800;color:var(--c500);text-transform:uppercase;letter-spacing:.5px">ZDP Interface</div>
+            <div style="padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:5px">
+              <div style="height:8px;border-radius:3px;background:var(--c050)"></div>
+              <div style="height:8px;border-radius:3px;background:var(--c050)"></div>
+              <div style="height:8px;border-radius:3px;background:var(--c050)"></div>
+              <div style="height:8px;border-radius:3px;background:var(--c050)"></div>
+            </div>
+          </div>
+          <div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg)">
+            <div style="background:#eee;padding:7px 12px;font-size:10px;font-weight:800;color:var(--tq);text-transform:uppercase;letter-spacing:.5px">RDP Interface</div>
+            <div style="padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:5px">
+              <div style="height:8px;border-radius:3px;background:var(--bg-alt)"></div>
+              <div style="height:8px;border-radius:3px;background:var(--bg-alt)"></div>
+              <div style="height:8px;border-radius:3px;background:var(--bg-alt)"></div>
+              <div style="height:8px;border-radius:3px;background:var(--bg-alt)"></div>
+            </div>
+          </div>
+          <!-- New team = new design -->
+          <div style="border-radius:10px;border:1.5px dashed var(--rd);overflow:hidden;background:#fff">
+            <div style="background:var(--rd-l);padding:7px 12px;font-size:10px;font-weight:800;color:var(--rd);text-transform:uppercase;letter-spacing:.5px">New team → New interface</div>
+            <div style="padding:10px 12px;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--rd)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span style="font-size:12px;font-weight:700">Full redesign required</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--ts);line-height:1.5">N personas × M features<br>= N×M screens to design &amp; maintain</div>
+      </div>
+
+      <!-- CENTER divider -->
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:32px;gap:8px;color:var(--c500)">
+        <div style="width:1px;flex:1;background:var(--border)"></div>
+        <span style="font-size:22px;font-weight:900">vs</span>
+        <div style="width:1px;flex:1;background:var(--border)"></div>
+      </div>
+
+      <!-- RIGHT: gesture-based (scales) -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--g600)">✓ Design by gesture</span>
+        </div>
+        <!-- One interface -->
+        <div style="border-radius:10px;border:2px solid var(--c500);overflow:hidden;background:var(--bg)">
+          <!-- Scope bar -->
+          <div style="background:var(--c500);padding:9px 12px;display:flex;align-items:center;gap:6px">
+            <span style="font-size:10px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-right:4px">Scope</span>
+            <div style="background:rgba(255,255,255,.15);border-radius:var(--rf);padding:3px 9px;font-size:10px;font-weight:700;color:#fff">ZMP <span style="opacity:.5">▾</span></div>
+            <div style="background:rgba(255,255,255,.25);border-radius:var(--rf);padding:3px 9px;font-size:10px;font-weight:700;color:#fff">ZDP <span style="opacity:.5">▾</span></div>
+            <div style="background:rgba(255,255,255,.15);border-radius:var(--rf);padding:3px 9px;font-size:10px;font-weight:700;color:#fff">RDP <span style="opacity:.5">▾</span></div>
+          </div>
+          <!-- Shared activity zones -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border)">
+            <div style="padding:10px 10px;background:var(--bg)">
+              <div style="font-size:9px;font-weight:800;color:var(--c500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Forecast</div>
+              <div style="height:6px;border-radius:3px;background:var(--c050);margin-bottom:4px"></div>
+              <div style="height:6px;border-radius:3px;background:var(--c050);width:70%"></div>
+            </div>
+            <div style="padding:10px 10px;background:var(--bg)">
+              <div style="font-size:9px;font-weight:800;color:var(--g600);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Replenishment</div>
+              <div style="height:6px;border-radius:3px;background:var(--g050);margin-bottom:4px"></div>
+              <div style="height:6px;border-radius:3px;background:var(--g050);width:70%"></div>
+            </div>
+            <div style="padding:10px 10px;background:var(--bg)">
+              <div style="font-size:9px;font-weight:800;color:var(--am);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Constraints</div>
+              <div style="height:6px;border-radius:3px;background:var(--am-l);margin-bottom:4px"></div>
+              <div style="height:6px;border-radius:3px;background:var(--am-l);width:70%"></div>
+            </div>
+          </div>
+        </div>
+        <!-- New team = zero redesign -->
+        <div style="margin-top:8px;border-radius:10px;border:1.5px dashed var(--g600);overflow:hidden;background:#fff">
+          <div style="background:var(--c500);padding:9px 12px;display:flex;align-items:center;gap:6px">
+            <span style="font-size:10px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-right:4px">Scope</span>
+            <div style="background:rgba(255,255,255,.15);border-radius:var(--rf);padding:3px 9px;font-size:10px;font-weight:700;color:#fff">ZMP <span style="opacity:.5">▾</span></div>
+            <div style="background:rgba(255,255,255,.15);border-radius:var(--rf);padding:3px 9px;font-size:10px;font-weight:700;color:#fff">ZDP <span style="opacity:.5">▾</span></div>
+            <div style="background:rgba(255,255,255,.15);border-radius:var(--rf);padding:3px 9px;font-size:10px;font-weight:700;color:#fff">RDP <span style="opacity:.5">▾</span></div>
+            <div style="background:rgba(1,127,92,.25);border:1px solid var(--g600);border-radius:var(--rf);padding:3px 9px;font-size:10px;font-weight:800;color:#fff;display:flex;align-items:center;gap:4px">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New team
+            </div>
+          </div>
+          <div style="padding:10px 12px;display:flex;align-items:center;gap:6px;color:var(--g600)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span style="font-size:12px;font-weight:700">Zero redesign. Same gestures, new scope.</span>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--ts);line-height:1.5">1 gesture model × N contexts<br>= one interface that scales without friction</div>
+      </div>
+    </div>
+
+    <!-- Real proof — card + screenshot stacked per domain -->
+    <div style="margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="border-radius:10px;border:1px solid var(--border);padding:16px 18px;background:var(--bg)">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tq);margin-bottom:6px">Domain 1 · Deployed</div>
+          <div style="font-size:14px;font-weight:800;color:var(--t)">🏭 Warehouse Replenishment</div>
+          <div style="font-size:11px;color:var(--g600);font-weight:700;margin-top:4px">Zero redesign</div>
+        </div>
+        <img src="img/warehouse-replenishment-settings.png" alt="Warehouse Replenishment settings" style="width:100%;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid var(--border);display:block">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="border-radius:10px;border:1px solid var(--border);padding:16px 18px;background:var(--bg)">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tq);margin-bottom:6px">Domain 2 · Deployed</div>
+          <div style="font-size:14px;font-weight:800;color:var(--t)">🏪 Store Safety Stock</div>
+          <div style="font-size:11px;color:var(--g600);font-weight:700;margin-top:4px">Zero redesign</div>
+        </div>
+        <img src="img/store-safety-stock-settings.png" alt="Store Safety Stock settings" style="width:100%;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid var(--border);display:block">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="border-radius:10px;border:1px solid var(--border);padding:16px 18px;background:var(--bg)">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tq);margin-bottom:6px">Domain 3 · Deployed</div>
+          <div style="font-size:14px;font-weight:800;color:var(--t)">♻️ Circular Second-Life</div>
+          <div style="font-size:11px;color:var(--g600);font-weight:700;margin-top:4px">Zero redesign</div>
+        </div>
+        <img src="img/circular-sp2l-settings.png" alt="Circular Second-Life SP2L settings" style="width:100%;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid var(--border);display:block">
+      </div>
+    </div>
+    <div class="orgline mt16" style="text-align:center">Same Scope Bar, same gestures — persona is just a filter. <strong style="color:var(--c500)">Three domains deployed. Zero redesign.</strong></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PART HEADER · ACT III              -->
+<!-- ═══════════════════════════════════ -->
+<section class="part-band" id="act3" style="background:#014F39">
+  <div class="part-band-inner">
+    <div class="part-act">Act III · The Interaction Engine</div>
+    <div class="part-title">Three primitives.<br>Every workflow.</div>
+    <div class="part-sub">WHEN + IF → THEN. The same three-zone grammar applies to every operational gesture — from routine replenishment to the most complex seasonal exception.</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- SCENE 7 · 3 PRIMITIVES             -->
+<!-- ═══════════════════════════════════ -->
+<section class="scene">
+  <div class="wrap">
+    <div>
+      <div class="scene-num">Universal Grammar</div>
+      <h2>Not by persona.<br>By gesture and by routine.</h2>
+      <p class="lead">The alternative to designing by persona is designing around <strong>what the work actually is</strong>: a repeatable sequence of gestures, structured like an algorithm, calibrated to an operational tempo. We called this model <strong style="color:var(--c500)">GestureOps</strong> — three structural zones, one temporal rhythm, any planner, any domain.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px">
+
+      <!-- LEFT: Gesture grammar (structural) -->
+      <div style="border-radius:14px;border:1px solid var(--border);padding:28px 24px;background:var(--bg)">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--ts);margin-bottom:18px">Dimension 1 · Structure</div>
+        <h3 style="font-size:17px;font-weight:800;color:var(--t);margin-bottom:8px">Think in gestures</h3>
+        <p style="font-size:13px;color:var(--tq);line-height:1.6;margin-bottom:24px">Every interaction is a conditional sequence — the same logic as an algorithm, but driven by a human. Each gesture has an explicit context, a readable consequence, and a clear decision point.</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--c050);border-radius:10px;border-left:3px solid var(--c500)">
+            <span style="font-size:11px;font-weight:800;color:var(--c500);min-width:44px;padding-top:1px">WHEN</span>
+            <span style="font-size:12px;color:var(--c700);line-height:1.5">I define my scope: zone, season, product family. Context is always explicit before anything else.</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:rgba(1,127,92,.06);border-radius:10px;border-left:3px solid var(--g600)">
+            <span style="font-size:11px;font-weight:800;color:var(--g600);min-width:44px;padding-top:1px">IF</span>
+            <span style="font-size:12px;color:#014F39;line-height:1.5">I read what's happening and simulate what my next action would change — before committing it.</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:rgba(219,105,0,.08);border-radius:10px;border-left:3px solid var(--am)">
+            <span style="font-size:11px;font-weight:800;color:var(--am);min-width:44px;padding-top:1px">THEN</span>
+            <span style="font-size:12px;color:#5a2900;line-height:1.5">I act — or I let the algorithm run. Either way, the decision is traceable.</span>
+          </div>
+        </div>
+        <div style="margin-top:18px;font-size:12px;color:var(--ts);font-style:italic">Scope Bar → Evidence Zone → Exception Tray</div>
+      </div>
+
+      <!-- RIGHT: Temporal routine (behavioral) -->
+      <div style="border-radius:14px;border:1px solid var(--border);padding:28px 24px;background:var(--bg)">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--ts);margin-bottom:18px">Dimension 2 · Tempo</div>
+        <h3 style="font-size:17px;font-weight:800;color:var(--t);margin-bottom:8px">Think in routines</h3>
+        <p style="font-size:13px;color:var(--tq);line-height:1.6;margin-bottom:24px">The same sequence repeats daily, weekly, every season. The interface is shaped around this operational tempo — not around a feature list per role.</p>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="display:flex;gap:0;align-items:flex-start">
+            <div style="display:flex;flex-direction:column;align-items:center;margin-right:14px;flex-shrink:0">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--c500);display:flex;align-items:center;justify-content:center">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M6.5 1v2.5M10.3 2.7l-1.8 1.8M12 6.5H9.5M10.3 10.3l-1.8-1.8M6.5 12V9.5M2.7 10.3l1.8-1.8M1 6.5h2.5M2.7 2.7l1.8 1.8"/></svg>
+              </div>
+              <div style="width:1px;height:22px;background:var(--border);margin:3px 0"></div>
+            </div>
+            <div style="padding-bottom:14px">
+              <strong style="font-size:13px;color:var(--t)">Alert</strong>
+              <div style="font-size:12px;color:var(--tq);margin-top:2px">Anomaly flagged by the system, or proactive investigation by the planner</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:0;align-items:flex-start">
+            <div style="display:flex;flex-direction:column;align-items:center;margin-right:14px;flex-shrink:0">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--g600);display:flex;align-items:center;justify-content:center">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="1" width="11" height="11" rx="1.5"/><path d="M4 6.5h5M4 4.5h5M4 8.5h3"/></svg>
+              </div>
+              <div style="width:1px;height:22px;background:var(--border);margin:3px 0"></div>
+            </div>
+            <div style="padding-bottom:14px">
+              <strong style="font-size:13px;color:var(--t)">Analyze</strong>
+              <div style="font-size:12px;color:var(--tq);margin-top:2px">Read the evidence. Understand the real impact before touching anything.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:0;align-items:flex-start">
+            <div style="display:flex;flex-direction:column;align-items:center;margin-right:14px;flex-shrink:0">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--am);display:flex;align-items:center;justify-content:center">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v2.5l1.5 1.5"/></svg>
+              </div>
+              <div style="width:1px;height:22px;background:var(--border);margin:3px 0"></div>
+            </div>
+            <div style="padding-bottom:14px">
+              <strong style="font-size:13px;color:var(--t)">Decide</strong>
+              <div style="font-size:12px;color:var(--tq);margin-top:2px">Human judgment applied to a pre-computed simulation — not a guess.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:0;align-items:flex-start">
+            <div style="display:flex;flex-direction:column;align-items:center;margin-right:14px;flex-shrink:0">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--rd);display:flex;align-items:center;justify-content:center">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><polyline points="2 7 5 10 11 3"/></svg>
+              </div>
+            </div>
+            <div>
+              <strong style="font-size:13px;color:var(--t)">Act — or stand down</strong>
+              <div style="font-size:12px;color:var(--tq);margin-top:2px">The algorithm takes back control. With or without an override, the gesture is complete.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Screenshot -->
+    <div style="margin-top:32px">
+      <img src="img/forecast-piloting-alerts.png" alt="FAST Forecast Piloting Tool — Scope Bar + Evidence Zone + Alert Tray" style="width:100%;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,.1)">
+      <div class="orgline mt16">Two readings, one model — <strong>WHEN + IF → THEN</strong>, repeated across every operational routine</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PART HEADER · ACT IV               -->
+<!-- ═══════════════════════════════════ -->
+<section class="part-band" id="act4" style="background:#080d1e">
+  <div class="part-band-inner">
+    <div class="part-act">Act IV · Business Proof</div>
+    <div class="part-title">The numbers.<br>Zero redesign tax.</div>
+    <div class="part-sub">Connecting live data sources and ensuring real-time reliability required serious backend work. The proof is what happened next: three different business domains deployed on the same interface — without a single redesign.</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- SCENE 10 · MEASURED PROOF          -->
+<!-- ═══════════════════════════════════ -->
+<section class="scene">
+  <div class="wrap">
+    <div>
+      <div class="scene-num">Measured Impact</div>
+      <h2>One interface model.<br>Zero redesign tax.</h2>
+      <p class="lead">The real bet was on the interaction model: build it right once, and deploying to a new domain should cost near zero in design. <strong>Warehouse replenishment, store safety stock, circular operations — same interface, no redesign, three times.</strong></p>
+    </div>
+    <div class="proof-grid mt32">
+      <div class="proof-card csat">
+        <div class="proof-val">+44%</div>
+        <div class="proof-lbl">User Satisfaction (CSAT)</div>
+        <div class="proof-sub">Measured across 30 countries, post-deployment</div>
+      </div>
+      <div class="proof-card tickets">
+        <div class="proof-val">−30%</div>
+        <div class="proof-lbl">Support Tickets &amp; Configuration Errors</div>
+        <div class="proof-sub">Direct impact on operational support costs</div>
+      </div>
+      <div class="proof-card trust">
+        <div class="proof-val">1.9 → 4.0</div>
+        <div class="proof-lbl">Planner Trust Score out of 5</div>
+        <div class="proof-sub">Measured before and after the interface redesign</div>
+      </div>
+      <div class="proof-card shadow">
+        <div class="proof-val">0</div>
+        <div class="proof-lbl">Shadow Excel Files Remaining</div>
+        <div class="proof-sub">When visibility is restored, operators stop building workarounds</div>
+      </div>
+    </div>
+    <div class="orgline mt24">When operators can see exactly what the algorithm is doing — and why — <strong>human trust replaces manual double-checking, and the interface pays for itself.</strong></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- SCENE CLOSE                        -->
+<!-- ═══════════════════════════════════ -->
+<section class="scene scene-close" style="background:linear-gradient(160deg,#060a1c 0%,#0d1230 100%);padding:80px 0">
+  <div class="wrap">
+    <div class="close-inner">
+      <div class="close-kicker">GestureOps · MySupply Design REX</div>
+      <div class="close-title">Tool Fragmentation<br>→ AI Groundwork.</div>
+      <div class="close-divider"></div>
+      <div class="close-sub">Two years. Three domains. Thirty countries. One interaction pattern.</div>
+
+      <!-- Stats row -->
+      <div style="display:flex;gap:28px;justify-content:center;margin-top:40px;flex-wrap:wrap">
+        <div style="text-align:center"><div style="font-size:40px;font-weight:900;color:#fff;letter-spacing:-2px">+44%</div><div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-top:4px">CSAT</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.12)"></div>
+        <div style="text-align:center"><div style="font-size:40px;font-weight:900;color:#fff;letter-spacing:-2px">−30%</div><div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-top:4px">Tickets</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.12)"></div>
+        <div style="text-align:center"><div style="font-size:40px;font-weight:900;color:#fff;letter-spacing:-2px">×3</div><div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-top:4px">Trust score</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.12)"></div>
+        <div style="text-align:center"><div style="font-size:40px;font-weight:900;color:#fff;letter-spacing:-2px">0</div><div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-top:4px">Redesign tax</div></div>
+      </div>
+
+      <!-- One Interface video teaser — framed -->
+      <div style="margin-top:56px">
+        <div style="font-size:12px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:16px">Not just an audit trail. Training data.</div>
+        <!-- Browser-frame card -->
+        <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 60px rgba(0,0,0,.6);max-width:720px;margin:0 auto;position:relative">
+          <!-- Fake browser chrome -->
+          <div style="background:#1a1f3a;padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.08)">
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15)"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15)"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15)"></div>
+            <div style="flex:1;background:rgba(255,255,255,.07);border-radius:4px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,.3);margin:0 12px">one-interface.decathlon.com</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="width:8px;height:8px;border-radius:50%;background:#3aff9a;box-shadow:0 0 6px #3aff9a;animation:pulse 2s ease-in-out infinite"></div>
+              <span style="font-size:10px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.5px">One Interface · 2028</span>
+            </div>
+          </div>
+          <!-- Video -->
+          <video autoplay loop muted playsinline
+            style="width:100%;display:block;filter:blur(2px) brightness(.75);transform:scale(1.02)">
+            <source src="img/one-interface-teaser.mp4" type="video/mp4">
+          </video>
+          <!-- "Coming soon" overlay badge -->
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,10,28,.25)">
+            <div style="background:rgba(6,10,28,.8);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:12px 24px;backdrop-filter:blur(8px)">
+              <span style="font-size:13px;font-weight:800;color:#fff;letter-spacing:.5px">What comes next →</span>
+              <span style="font-size:13px;font-weight:800;color:var(--c500);margin-left:6px;letter-spacing:.5px">One Interface</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+@keyframes pulse {
+  0%,100%{opacity:.4;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.3)}
+}
+</style>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- ANNEX                                                   -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TEAM CREDITS -->
+<section style="background:#0d1117;padding:80px 0 64px;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:900px;margin:0 auto;padding:0 60px">
+    <!-- Thank you -->
+    <div style="text-align:center;margin-bottom:64px">
+      <div style="font-size:clamp(56px,7vw,96px);font-weight:900;letter-spacing:-3px;color:#fff;line-height:1">Thank you.</div>
+      <div style="font-size:16px;color:rgba(255,255,255,.35);margin-top:16px;font-weight:400">Questions welcome — details in the annex.</div>
+    </div>
+    <div style="text-align:center;margin-bottom:56px">
+      <div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:12px">The team behind it</div>
+      <div style="font-size:28px;font-weight:900;color:#fff;letter-spacing:-.5px">MySupply · 2022 – 2025</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:40px 32px;margin-bottom:40px">
+      <!-- PMs -->
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--c500);margin-bottom:16px">Product Managers</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:15px;font-weight:600;color:#fff">Julie Trouillet</span>
+          <span style="font-size:15px;font-weight:600;color:#fff">Antoine Muny</span>
+        </div>
+      </div>
+      <!-- Engineers -->
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--c500);margin-bottom:16px">Engineers</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:15px;font-weight:600;color:#fff">Louis Choquet</span>
+          <span style="font-size:15px;font-weight:600;color:#fff">Hugo Sergeant</span>
+          <span style="font-size:15px;font-weight:600;color:#fff">Alexis Lamonnier</span>
+          <span style="font-size:15px;font-weight:600;color:#fff">Enzo Dupré</span>
+          <span style="font-size:15px;font-weight:600;color:#fff">Hamid Idrissi</span>
+        </div>
+      </div>
+      <!-- Designer -->
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--c500);margin-bottom:16px">Product Designer</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:15px;font-weight:600;color:#fff">Camille Melin</span>
+        </div>
+      </div>
+      <!-- Run Team -->
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--c500);margin-bottom:16px">Run Team</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:15px;font-weight:600;color:#fff">Claudine Carisey</span>
+          <span style="font-size:15px;font-weight:600;color:#fff">Assia Bechia</span>
+          <span style="font-size:15px;font-weight:600;color:#fff">Jimmy Vantrepode</span>
+          <span style="font-size:15px;font-weight:600;color:#fff">Nabil Laghouati</span>
+        </div>
+      </div>
+    </div>
+    <!-- ZDPs -->
+    <div style="padding-top:32px;border-top:1px solid rgba(255,255,255,.06)">
+      <div style="font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--c500);margin-bottom:20px;text-align:center">ZDPs ❤️</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center">
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Pawel Siepak</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Min Qi Lee</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Ann Natchanok Mansri</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Niveditha Meyers</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Praveen Balajee Baskara Mani</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Nataly Pareja</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Juan Bernal</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Yenny Delgado</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Silvia Rodriguez</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Jagadish Yadav</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Vijaiyashwath</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Anushka Khandelwal</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Kaushik Bharadhwaj</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Jake Kan</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Connie Pan</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Gillian Hu</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Bruce Li</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Olivier Verscheure</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Hajar Klaoua</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Cansu Yerebakan</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Cankut Alakuş</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Paul Le Bourvellec</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Hakima El Quazbari</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Yann Catry</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Amélie Capon</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Jean Philippe Lamonnier</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Aymen Hergli</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Olivier Dessaint</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Soufiane Maazaz</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Erick Cesbron</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Vincent Marquet</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Camille Ouahidi</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Guillaume Depreux</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Fabio Meregalli</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Richard Putti</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Vincent Daleas</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Yasin Ozzeybek</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Wojtek Szlachta</span>
+        <span style="font-size:13px;font-weight:500;color:rgba(255,255,255,.65)">Philippe Auzout</span>
+      </div>
+    </div>
+    <!-- Annex label -->
+    <div style="text-align:center;margin-top:48px">
+      <span style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.18)">Annexe · Technical details available for Q&amp;A</span>
+    </div>
+  </div>
+</section>
+
+<!-- ANNEX · GLOSSARY -->
+<section class="scene" id="appendix" style="background:#f9f8f8">
+  <div class="wrap">
+    <div style="margin-bottom:32px">
+      <div class="scene-num">Appendix · Glossary</div>
+      <h2 style="font-size:clamp(24px,3vw,36px)">Key terms & acronyms</h2>
+      <p class="lead">Reference for readers unfamiliar with Decathlon's supply chain organization or the GestureOps framework.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">
+      <!-- Org acronyms -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px 22px">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--c500);margin-bottom:14px">Organisation</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">ZDP</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Zone Dispatch Planner — manages warehouse-to-CAR dispatch flows. Primary user of MySupply.</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">ZMP</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Zone Market Planner — sets commercial strategy and season targets.</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">RDP</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Retail Dispatch Planner — manages last-mile store replenishment.</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">CAC</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Central Accumulation Center — continental warehouse (Europe, Asia…).</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">CAR</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Centre d'Accumulation Régional — regional distribution warehouse.</span></div>
+        </div>
+      </div>
+      <!-- Tools & systems -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px 22px">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--c500);margin-bottom:14px">Tools & systems</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">MySupply</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Decathlon's internal hub for supply chain planning — consolidates forecast, replenishment, and stock management.</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">SAP</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Legacy ERP used before MySupply — raw transaction interface, no UX layer for operational decisions.</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">One Interface</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Next-generation platform extending the GestureOps model to all operational roles at Decathlon. Target: 2028.</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">CSAT</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Customer Satisfaction score — measured here on internal users (ZDPs) post-deployment.</span></div>
+        </div>
+      </div>
+      <!-- GestureOps framework -->
+      <div style="background:var(--c050);border:1px solid var(--c500);border-radius:12px;padding:20px 22px">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--c500);margin-bottom:14px">GestureOps framework</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">GestureOps</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Interaction model built on three structural zones and one temporal rhythm — applicable to any operational planning context.</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">Scope Bar (WHEN)</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">The planner defines the scope of their action — geography, product family, time period.</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">Evidence Zone (IF)</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Live data, impact simulation, and context the planner reads before deciding.</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">Exception Tray (THEN)</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">Where the planner acts — or confirms the algorithm runs unmodified.</span></div>
+          <div><span style="font-size:13px;font-weight:800;color:var(--t)">Alert → Analyze → Decide → Act</span> <span style="font-size:12px;color:var(--tq);margin-left:6px">The four-phase temporal routine every planner follows, regardless of domain.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANNEX · SCENE A · CIRCUIT BREAKER -->
+<section class="scene" style="background:var(--bg-alt)">
+  <div class="wrap">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ts);margin-bottom:20px">Annexe A · Mécanique des paramètres</div>
+    <div class="two-col v-center">
+      <div>
+        <div class="scene-num">Settings Mechanics</div>
+        <h2>The operational<br>circuit-breaker.</h2>
+        <p class="lead">An inactive toggle doesn't mean "nothing happens." It means <strong>the algorithm is executing its standard policy.</strong> By default, automation owns 100% of the screen.</p>
+        <div class="mt24" style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--border)">
+            <div style="width:28px;height:28px;border-radius:7px;background:var(--c050);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--c500)" stroke-width="1.6" stroke-linecap="round"><path d="M2 7h10M7 2v10"/></svg>
+            </div>
+            <div><strong style="font-size:13px">Policy conflict detection</strong><br><span style="font-size:12px;color:var(--tq)">Automatically checks if the new rule collides with an existing national policy before committing.</span></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--border)">
+            <div style="width:28px;height:28px;border-radius:7px;background:var(--rd-l);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--rd)" stroke-width="1.6" stroke-linecap="round"><path d="M7 4v4M7 10v.5"/><path d="M6 2l-4 8h10L6 2z"/></svg>
+            </div>
+            <div><strong style="font-size:13px">Volume footprint preview</strong><br><span style="font-size:12px;color:var(--tq)">Calculates the exact scope: tuning 1 store, or modifying 14,000 product-warehouse pairs?</span></div>
+          </div>
+        </div>
+        <div class="orgline green mt24">The excess incident from Slide 3 is mathematically prevented — before the batch run ever hits production.</div>
+      </div>
+      <div>
+        <img src="img/settings-impact-check.png" alt="FAST Replenishment Settings — Impact checking" style="width:100%;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,.1)">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANNEX · SCENE B · PUSH / PULL -->
+<section class="scene">
+  <div class="wrap">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ts);margin-bottom:20px">Annexe B · Modes d'accès</div>
+    <div>
+      <div class="scene-num">Forecast &amp; Monitoring</div>
+      <h2>Push or Pull. Same surface.<br>Always.</h2>
+      <p class="lead">Whether a task begins from an automated system alert or an operator's own investigation, both paths converge into the exact same workspace.</p>
+    </div>
+    <div class="flow-grid mt32">
+      <div class="flow-col">
+        <div class="flow-box push">
+          <div class="flow-label">Push Mode · System-Initiated</div>
+          <h4>Anomaly alert detected</h4>
+          <p>Categorized by business severity. Root cause pre-identified. A single click auto-fills the Scope Bar.</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+        <div class="flow-arrow">→</div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--ts);text-align:center">Both paths<br>converge</div>
+        <div class="flow-arrow">←</div>
+      </div>
+      <div class="flow-col">
+        <div class="flow-box pull">
+          <div class="flow-label">Pull Mode · Operator-Initiated</div>
+          <h4>Ad-hoc investigation</h4>
+          <p>The planner selects filters directly in the Scope Bar. Explores freely. Identical surface, identical controls.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flow-box shared mt16" style="max-width:500px;margin-left:auto;margin-right:auto;margin-top:16px">
+      <div class="flow-label">Shared Surface · Both Modes</div>
+      <h4>Evidence Zone + Exception Tray</h4>
+      <p>Real-time pre-flight impact previews. One-click bulk adjustments. Full audit trail.</p>
+    </div>
+    <div style="display:flex;gap:24px;margin-top:24px;flex-wrap:wrap">
+      <div style="flex:1;min-width:240px">
+        <img src="img/forecast-jtbd-flow.png" alt="Push — Alert selection flow" style="width:100%;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,.1)">
+      </div>
+      <div style="flex:1;min-width:240px">
+        <img src="img/forecast-adjustment-drawer.png" alt="Pull — Define Target Forecast drawer" style="width:100%;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,.1)">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANNEX · SCENE C · GESTUREOPS MODEL -->
+<section class="scene" style="background:var(--bg-alt)">
+  <div class="wrap">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ts);margin-bottom:20px">Annexe C · Le modèle GestureOps</div>
+    <div>
+      <div class="scene-num">The GestureOps Model</div>
+      <h2>Three zones.<br>One decision grammar.</h2>
+      <p class="lead">Every operational gesture in MySupply maps to the same three primitives — from routine replenishment to the most complex seasonal exception.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:40px">
+      <div style="border-radius:14px;border:2px solid var(--c500);padding:28px 24px;background:#fff">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--c050);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--c500)" stroke-width="1.6" stroke-linecap="round"><rect x="2" y="2" width="12" height="4" rx="1"/><path d="M2 10h4M8 10h6"/></svg>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--c500)">Zone 1 · Scope Bar</div>
+            <div style="font-size:20px;font-weight:900;color:var(--c700)">WHEN &amp; WHERE</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--tq);line-height:1.6">Product family, geographic zone, calendar horizon. Scope is always explicit before any change is committed.</p>
+        <div style="margin-top:16px;padding:10px 14px;background:var(--c050);border-radius:8px;font-size:11px;font-weight:700;color:var(--c700)">Eliminated the 14,000-settings incident</div>
+      </div>
+      <div style="border-radius:14px;border:2px solid var(--g600);padding:28px 24px;background:#fff">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(1,127,92,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--g600)" stroke-width="1.6" stroke-linecap="round"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M5 8h6M5 5h6M5 11h3"/></svg>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--g600)">Zone 2 · Evidence Zone</div>
+            <div style="font-size:20px;font-weight:900;color:#014F39">WHAT &amp; WHY</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--tq);line-height:1.6">The dense operational ledger. Shows the real-time consequence of any parameter change before it's committed.</p>
+        <div style="margin-top:16px;padding:10px 14px;background:rgba(1,127,92,.08);border-radius:8px;font-size:11px;font-weight:700;color:#014F39">Planner trust 1.9 → 4.0 / 5</div>
+      </div>
+      <div style="border-radius:14px;border:2px solid var(--am);padding:28px 24px;background:#fff">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(219,105,0,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--am)" stroke-width="1.6" stroke-linecap="round"><path d="M10 2v12M2 8h8"/><rect x="10" y="4" width="4" height="8" rx="1"/></svg>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--am)">Zone 3 · Exception Tray</div>
+            <div style="font-size:20px;font-weight:900;color:#5a2900">THEN</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--tq);line-height:1.6">Human judgment applied precisely, with explicit reason codes — every override structured for audit and AI training.</p>
+        <div style="margin-top:16px;padding:10px 14px;background:rgba(219,105,0,.08);border-radius:8px;font-size:11px;font-weight:700;color:#5a2900">−30% support tickets</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANNEX · SCENE E · AI HORIZON -->
+<section class="scene scene-dark" style="background:#080d1e">
+  <div class="wrap">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.2);margin-bottom:20px">Annexe E · AI Horizon</div>
+    <div class="two-col v-center">
+      <div>
+        <div class="scene-num" style="color:rgba(255,255,255,.35);font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase">AI Horizon</div>
+        <h2 style="color:#fff;margin-top:8px">You cannot train AI on decisions<br>buried in spreadsheets.</h2>
+        <p class="lead" style="color:rgba(255,255,255,.55)">Believing AI eliminates the need for interfaces is an expensive illusion. Consider the commercial cockpit: autopilot flies 70% of routine cruising — but the cockpit is engineered for the 30% where human judgment is vital.</p>
+        <div class="mt24">
+          <div class="cockpit-pct">70<span style="font-size:40px;letter-spacing:-1px">%</span></div>
+          <div class="cockpit-pct-sub">Automated — routine cruising handled by autopilot</div>
+          <div class="vs-bar mt16"><div class="vs-fill" style="width:70%"></div></div>
+          <div style="font-size:12px;color:rgba(255,255,255,.35);margin-top:6px;font-weight:600">30% · Human judgment — storms, turbulence, system crises</div>
+        </div>
+        <div class="cockpit-right mt24">
+          <div class="cockpit-stat">
+            <svg viewBox="0 0 20 20" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.6" stroke-linecap="round"><path d="M10 2v4M10 14v4M2 10h4M14 10h4"/><circle cx="10" cy="10" r="3"/></svg>
+            <p>Every manual override buried in an offline Excel was <strong>institutional knowledge lost forever.</strong></p>
+          </div>
+          <div class="cockpit-stat">
+            <svg viewBox="0 0 20 20" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.6" stroke-linecap="round"><polyline points="3 9 10 3 17 9"/><path d="M9 17V9h4v8"/></svg>
+            <p>Structured human decisions with explicit parameters and standardized reason codes become <strong>clean, qualified AI training data.</strong></p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:28px">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:20px">MySupply → One Interface handover</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:32px;height:32px;border-radius:8px;background:var(--c050);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="var(--c500)" stroke-width="1.8" stroke-linecap="round"><polyline points="2 8 6 11 13 4"/></svg></div>
+              <span style="font-size:13px;color:rgba(255,255,255,.75)">3-zone interaction pattern validated at scale</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:32px;height:32px;border-radius:8px;background:var(--c050);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="var(--c500)" stroke-width="1.8" stroke-linecap="round"><polyline points="2 8 6 11 13 4"/></svg></div>
+              <span style="font-size:13px;color:rgba(255,255,255,.75)">Reason codes &amp; structured overrides = clean training data</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:32px;height:32px;border-radius:8px;background:var(--c050);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="var(--c500)" stroke-width="1.8" stroke-linecap="round"><polyline points="2 8 6 11 13 4"/></svg></div>
+              <span style="font-size:13px;color:rgba(255,255,255,.75)">Human trust baseline established — agents can inherit it</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:32px;height:32px;border-radius:8px;background:var(--c050);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="var(--c500)" stroke-width="1.8" stroke-linecap="round"><polyline points="2 8 6 11 13 4"/></svg></div>
+              <span style="font-size:13px;color:rgba(255,255,255,.75)">Pre-flight circuit-breaker → AI confidence threshold</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANNEX · SCENE D · GENESIS → ONE INTERFACE -->
+<section class="scene scene-dark" style="background:#050a1a">
+  <div class="wrap">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.2);margin-bottom:20px">Annexe D · Genèse de One Interface</div>
+    <div>
+      <div class="scene-num" style="color:rgba(255,255,255,.35)">The Genesis</div>
+      <h2 style="color:#fff">MySupply was the prototype.<br>One Interface is the platform.</h2>
+      <p class="lead" style="color:rgba(255,255,255,.55)">What started as a supply chain tool revealed something more fundamental: a universal operating model for any high-stakes operational decision. Three zones. One gesture grammar. Any domain.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:32px;align-items:center;margin-top:48px">
+      <div style="border-radius:14px;border:1px solid rgba(255,255,255,.12);padding:28px;background:rgba(255,255,255,.04)">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:12px">2024–2026 · MySupply</div>
+        <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:16px">GestureOps at CAC level</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:10px;align-items:center"><div style="width:6px;height:6px;border-radius:2px;background:var(--c500);flex-shrink:0"></div><span style="font-size:13px;color:rgba(255,255,255,.6)">30 countries · 3 planner domains</span></div>
+          <div style="display:flex;gap:10px;align-items:center"><div style="width:6px;height:6px;border-radius:2px;background:var(--c500);flex-shrink:0"></div><span style="font-size:13px;color:rgba(255,255,255,.6)">Scope Bar + Evidence Zone + Exception Tray</span></div>
+          <div style="display:flex;gap:10px;align-items:center"><div style="width:6px;height:6px;border-radius:2px;background:var(--c500);flex-shrink:0"></div><span style="font-size:13px;color:rgba(255,255,255,.6)">Human oversight over algorithmic decisions</span></div>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:36px;font-weight:900;color:var(--c500)">→</div>
+        <div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.2);letter-spacing:.7px;text-transform:uppercase;margin-top:6px">becomes</div>
+      </div>
+      <div style="border-radius:14px;border:1px solid rgba(54,67,186,.5);padding:28px;background:rgba(54,67,186,.12)">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:rgba(120,140,255,.6);margin-bottom:12px">2028–2030 · One Interface</div>
+        <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:16px">GestureOps at enterprise scale</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:10px;align-items:center"><div style="width:6px;height:6px;border-radius:2px;background:rgba(120,140,255,.7);flex-shrink:0"></div><span style="font-size:13px;color:rgba(255,255,255,.6)">Any domain · Any Decathlon operational role</span></div>
+          <div style="display:flex;gap:10px;align-items:center"><div style="width:6px;height:6px;border-radius:2px;background:rgba(120,140,255,.7);flex-shrink:0"></div><span style="font-size:13px;color:rgba(255,255,255,.6)">Same 3-zone grammar, AI-augmented</span></div>
+          <div style="display:flex;gap:10px;align-items:center"><div style="width:6px;height:6px;border-radius:2px;background:rgba(120,140,255,.7);flex-shrink:0"></div><span style="font-size:13px;color:rgba(255,255,255,.6)">Structured decisions → AI training data</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANNEX · SCENE F · INCIDENTS -->
+<section class="scene scene-dark" style="background:#080d1e">
+  <div class="wrap">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.2);margin-bottom:20px">Annexe F · Incidents</div>
+    <div>
+      <div class="scene-num" style="color:rgba(255,255,255,.35)">Automation without interface</div>
+      <h2 style="color:#fff;margin-top:8px">It can only fail in two ways.</h2>
+      <p class="lead" style="color:rgba(255,255,255,.5)">These incidents happened when the only environment available to ZDPs was raw SAP screens. In both cases, the algorithm executed correctly. <strong style="color:rgba(255,255,255,.8)">What failed was the absence of an interface between the human and the machine.</strong></p>
+    </div>
+  <div class="wrap">
+    <div class="incident-grid mt32">
+      <div class="incident-box silence">
+        <div class="incident-box-label">Case 01 · Silence</div>
+        <h3>Zero stock dispatched.<br>Zero alerts triggered.</h3>
+        <p>A SAP formatting issue dropped leading zeros from a product family code. The replenishment algorithm silently skipped the entire family — for weeks. Nobody noticed. The system produced complete silence.</p>
+        <!-- Impact chain -->
+        <div style="margin-top:20px;display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:rgba(255,255,255,.3);margin-bottom:2px">Logistical cascade</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">1</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.55)">CARs receive no stock for affected family</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">2</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.55)">Stores report gradual stockouts — cause unknown</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">3</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.55)">No alert. No flag. Weeks pass before discovery.</span>
+          </div>
+        </div>
+        <div class="incident-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M17 6.1H3"/><path d="M21 12.1H3"/><path d="M15.1 18H3"/></svg>
+        </div>
+      </div>
+      <div class="incident-box excess">
+        <div class="incident-box-label">Case 02 · Excess</div>
+        <h3>14,000 product-warehouse<br>pairs altered overnight.</h3>
+        <p>A planner adjusted a rule for a single depot. Because the interface never made the boundary explicit, the algorithm applied the rule across an entire regional distribution center in a single overnight batch run.</p>
+        <!-- Impact chain -->
+        <div style="margin-top:20px;display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:rgba(255,255,255,.5);margin-bottom:2px">Logistical cascade</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">1</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.75)">Entire zone: 14,000 settings overwritten in one night</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">2</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.75)">Massive excess stock shipped to wrong CARs</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">3</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.75)">Manual rollback required across 3 logistics teams</span>
+          </div>
+        </div>
+        <div class="incident-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 9v4"/><circle cx="12" cy="17" r=".5" fill="white"/><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        </div>
+      </div>
+    </div>
+    <!-- 85k entries — scale of the Excess incident -->
+    <div style="margin-top:24px;border-radius:10px;overflow:hidden;border:1px solid rgba(192,24,42,.3);position:relative">
+      <div style="background:rgba(192,24,42,.15);padding:8px 14px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:8px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0182A" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/></svg>
+          <span style="font-size:11px;font-weight:800;color:rgba(255,100,100,.8);letter-spacing:.3px">Case 02 · What the planner couldn't see — 85,677 settings entries in scope</span>
+        </div>
+        <span style="font-size:10px;font-weight:700;background:rgba(192,24,42,.3);color:rgba(255,150,150,.9);padding:2px 8px;border-radius:var(--rf)">No scope boundary shown</span>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</section>
+
+<script>
+// Scroll-triggered scene activation
+const scenes = document.querySelectorAll('.scene, .part-band');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('in');
+  });
+}, { threshold: 0.12 });
+scenes.forEach(s => observer.observe(s));
+
+// Active nav highlight
+const acts = document.querySelectorAll('.part-band[id]');
+const navActs = document.querySelectorAll('.nav-act');
+const actObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navActs.forEach(n => n.classList.remove('active'));
+      const link = document.querySelector(`.nav-act[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+acts.forEach(a => actObserver.observe(a));
+
+// Init hero immediately
+document.getElementById('hero').classList.add('in');
+
+// ── Section-by-section keyboard navigation ──
+// Collects all major sections: hero, part-bands, scenes (excl. annex utility header)
+(function() {
+  function getSections() {
+    return Array.from(document.querySelectorAll('#hero, .part-band, .scene')).filter(el => {
+      // Exclude the annex divider (it has no meaningful scroll target)
+      return !el.closest('[style*="padding:40px 0 16px"]');
+    });
+  }
+
+  function getCurrentIndex(sections) {
+    const mid = window.innerHeight / 2;
+    let closest = 0, minDist = Infinity;
+    sections.forEach((s, i) => {
+      const rect = s.getBoundingClientRect();
+      const center = rect.top + rect.height / 2;
+      const dist = Math.abs(center - mid);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    return closest;
+  }
+
+  const NAV_H = 52; // fixed navbar height
+  let scrolling = false;
+
+  function jumpTo(el) {
+    if (scrolling) return;
+    scrolling = true;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => { scrolling = false; }, 900);
+  }
+
+  function scrollPage(delta) {
+    if (scrolling) return;
+    scrolling = true;
+    window.scrollBy({ top: delta, behavior: 'smooth' });
+    setTimeout(() => { scrolling = false; }, 900);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    const sections = getSections();
+    const idx = getCurrentIndex(sections);
+    const step = window.innerHeight - NAV_H;
+
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown') {
+      e.preventDefault();
+      const rect = sections[idx].getBoundingClientRect();
+      // If the current section's bottom is still below the viewport, scroll within it
+      if (rect.bottom > window.innerHeight + 8) {
+        scrollPage(step);
+      } else if (idx < sections.length - 1) {
+        jumpTo(sections[idx + 1]);
+      }
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      const rect = sections[idx].getBoundingClientRect();
+      // If the current section's top is above the nav, scroll up within it
+      if (rect.top < -(NAV_H + 8)) {
+        scrollPage(-step);
+      } else if (idx > 0) {
+        jumpTo(sections[idx - 1]);
+      }
+    }
+  });
+
+  // Touch swipe support (vertical)
+  let touchY = null;
+  document.addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (touchY === null) return;
+    const dy = touchY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) < 60) return;
+    const sections = getSections();
+    const idx = getCurrentIndex(sections);
+    const step = window.innerHeight - NAV_H;
+    if (dy > 0) {
+      const rect = sections[idx].getBoundingClientRect();
+      if (rect.bottom > window.innerHeight + 8) scrollPage(step);
+      else if (idx < sections.length - 1) jumpTo(sections[idx + 1]);
+    } else {
+      const rect = sections[idx].getBoundingClientRect();
+      if (rect.top < -(NAV_H + 8)) scrollPage(-step);
+      else if (idx > 0) jumpTo(sections[idx - 1]);
+    }
+    touchY = null;
+  }, { passive: true });
+
+  // Show a subtle navigation hint on first load
+  const hint = document.createElement('div');
+  hint.id = 'nav-hint';
+  hint.innerHTML = '↑ ↓  Arrow keys to navigate sections';
+  hint.style.cssText = 'position:fixed;bottom:24px;right:24px;background:rgba(0,0,0,.55);color:rgba(255,255,255,.65);font-size:11px;font-weight:700;letter-spacing:.5px;padding:8px 14px;border-radius:20px;pointer-events:none;z-index:9999;opacity:0;transition:opacity .4s;backdrop-filter:blur(6px)';
+  document.body.appendChild(hint);
+  setTimeout(() => { hint.style.opacity = '1'; }, 1200);
+  setTimeout(() => { hint.style.opacity = '0'; }, 4000);
+  setTimeout(() => { hint.remove(); }, 4500);
+})();
+
+// Before / After panel toggle (Scene 4)
+function setBAPanel(mode) {
+  const panelBefore = document.getElementById('panel-before');
+  const panelAfter  = document.getElementById('panel-after');
+  const btnBefore   = document.getElementById('ba-btn-before');
+  const btnAfter    = document.getElementById('ba-btn-after');
+  if (!panelBefore) return;
+  if (mode === 'before') {
+    panelBefore.style.display = 'block';
+    panelAfter.style.display  = 'none';
+    btnBefore.style.background = '#C0182A';
+    btnBefore.style.color      = '#fff';
+    btnAfter.style.background  = 'var(--bg-alt)';
+    btnAfter.style.color       = 'var(--ts)';
+    // pause the video when hidden
+    const vid = panelAfter.querySelector('video');
+    if (vid) vid.pause();
+  } else {
+    panelBefore.style.display = 'none';
+    panelAfter.style.display  = 'block';
+    btnBefore.style.background = 'var(--bg-alt)';
+    btnBefore.style.color      = 'var(--ts)';
+    btnAfter.style.background  = 'var(--c500)';
+    btnAfter.style.color       = '#fff';
+    const vid = panelAfter.querySelector('video');
+    if (vid) vid.play();
+  }
+}
+</script>
+</body>
+</html>
